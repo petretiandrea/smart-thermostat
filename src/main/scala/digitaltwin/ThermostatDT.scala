@@ -1,5 +1,6 @@
-package dt
+package digitaltwin
 
+import digitaltwin.ThermostatDT.State
 import play.api.libs.json.{JsValue, Json}
 import scalaj.http.{Http, HttpRequest}
 
@@ -12,12 +13,12 @@ trait ThermostatDT {
   def state(): State
 }
 
-trait State
-case object Heat extends State
-case object Cold extends State
-case object Off extends State
-
 object ThermostatDT {
+
+  trait State
+  case object Heat extends State
+  case object Cold extends State
+  case object Off extends State
 
   def wot(baseUrl: String) = new ThermostatDTWot(baseUrl)
 

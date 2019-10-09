@@ -1,11 +1,14 @@
 package gui
 
-import actor.ThermostatAgent.ChangeTargetTemperature
-import actor.{Agent, ThermostatAgent}
-import akka.actor.{ActorRef, ActorSystem, Props}
-import dt.State
+import agent.Agent.Environment
+import agent.Agent.EnvironmentExt
+import agent.ThermostatAgent
+import agent.ThermostatAgent.ChangeTargetTemperature
+import akka.actor.ActorRef
+import digitaltwin.ThermostatDT
 
-class VisualizerAgent(thermostatAgent: ActorRef, thermostatRegulator: ThermostatRegulatorPanel) extends ThermostatAgent {
+
+class VisualizerAgent(thermostat: ThermostatDT, thermostatAgent: ActorRef, thermostatRegulator: ThermostatRegulatorPanel) extends ThermostatAgent(thermostat) {
 
   override def preStart(): Unit = {
     super.preStart()
@@ -14,8 +17,8 @@ class VisualizerAgent(thermostatAgent: ActorRef, thermostatRegulator: Thermostat
     }
   }
 
-  override def plan(sensed: Map[String, Any]): Unit = {
-    thermostatRegulator.updateCurrentTemperature(sensed("temperature").asInstanceOf[Double])
-    thermostatRegulator.updateCurrentStatus(sensed("state").asInstanceOf[State])
+  override def plan(env: Environment): Unit = {
+    thermostatRegulator.updateCurrentTemperature(env.getValueOf("temperature"))
+    thermostatRegulator.updateCurrentStatus(env.getValueOf("state"))
   }
 }

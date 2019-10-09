@@ -1,9 +1,17 @@
-package actor
+package agent
 
+import agent.Agent.Environment
 import akka.actor.{Actor, ActorLogging, Scheduler}
 
 import scala.collection.immutable.Map
 import scala.concurrent.duration._
+
+object Agent {
+  type Environment = Map[String, Any]
+  implicit class EnvironmentExt(env: Environment) {
+    def getValueOf[T](key: String) : T = env(key).asInstanceOf[T]
+  }
+}
 
 abstract class Agent extends Actor with ActorLogging {
 
@@ -23,6 +31,6 @@ abstract class Agent extends Actor with ActorLogging {
     }
   }
 
-  def sense(): Map[String, Any]
-  def plan(sensed: Map[String, Any])
+  def sense(): Environment
+  def plan(sensed: Environment)
 }

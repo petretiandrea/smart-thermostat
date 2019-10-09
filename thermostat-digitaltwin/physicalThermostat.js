@@ -17,7 +17,7 @@ class PhysicalThermostat {
         if(!validState) return;
         switch(validState) {
             case "heat": this.startHeating(); break
-            case "cold": this.startCold(); break
+            case "cold": this.startCooling(); break
             case "off": this.stop(); break
         }
         this.state = validState

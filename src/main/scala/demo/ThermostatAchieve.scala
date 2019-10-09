@@ -1,24 +1,27 @@
-package actor
+package demo
 
+import agent.Agent.{Environment, EnvironmentExt}
+import agent.ThermostatAgent
 import akka.actor.{ActorSystem, Props}
-import dt._
+import digitaltwin.ThermostatDT.{Cold, Heat, Off, State}
+import digitaltwin._
 import gui.{ThermostatGUI, VisualizerAgent}
 
-class ThermostatAgent1 extends ThermostatAgent {
+class ThermostatAchieve(thermostat: ThermostatDT) extends ThermostatAgent(thermostat) {
 
   private val targetTemperature: Double = 20d
   private val THRESHOLD = 0.5
   private var achieved = false
 
-  override def plan(sensed: Map[String, Any]) {
+  override def plan(env: Environment) {
     if(!achieved) {
-      achieve(sensed, targetTemperature)
+      achieve(env, targetTemperature)
     }
   }
 
-  private def achieve(sensed: Map[String, Any], targetTemperature: Double): Unit = {
-    val temperature: Double = sensed("temperature").asInstanceOf[Double]
-    val state: State = sensed("state").asInstanceOf[State]
+  private def achieve(env: Environment, targetTemperature: Double): Unit = {
+    val temperature: Double = env.getValueOf("temperature")
+    val state: State = env.getValueOf("state")
 
     if(temperature - THRESHOLD > targetTemperature && `state` != Cold) {
       println("Cooling...")
@@ -35,12 +38,13 @@ class ThermostatAgent1 extends ThermostatAgent {
 }
 
 
-object LaunchAchieve {
+object ThermostatAchieve {
   def main(args: Array[String]): Unit = {
+    val thermostat = ThermostatDT.wot("http://localhost:3000")
     val gui = new ThermostatGUI()
     val actorSystem = ActorSystem()
-    val agentRef = actorSystem.actorOf(Props[ThermostatAgent1])
+    val agentRef = actorSystem.actorOf(Props(new ThermostatAchieve(thermostat)))
 
-    actorSystem.actorOf(Props(new VisualizerAgent(agentRef, gui.regulatorPanel)))
+    actorSystem.actorOf(Props(new VisualizerAgent(thermostat, agentRef, gui.regulatorPanel)))
   }
 }

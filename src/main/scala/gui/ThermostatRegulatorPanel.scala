@@ -2,7 +2,7 @@ package gui
 
 import java.awt.Dimension
 
-import dt.State
+import digitaltwin.ThermostatDT.State
 import javax.swing.{Box, JLabel, JPanel, JSlider}
 
 class ThermostatRegulatorPanel() extends JPanel {
