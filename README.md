@@ -1,6 +1,7 @@
 ## Thermostat Digital Twin
 Application written in nodejs:
 - folder: thermostat-digitaltwin
+- npm install
 - npm start
 
 ##### GET /thermostat/properties/temperature
