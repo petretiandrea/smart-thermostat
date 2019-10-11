@@ -6,17 +6,17 @@ let thermostat = new PhysicalThermostat()
 
 exports.heat = function(req, res) {
     thermostat.changeState("heat")
-    res.status(202).json({})
+    setResponseAccepted(res)
 }
 
 exports.cold = function(req, res) {
     thermostat.changeState("cold")
-    setResponseAccepted()
+    setResponseAccepted(res)
 }
 
 exports.off = function(req, res) {
     thermostat.changeState("off")
-    setResponseAccepted()
+    setResponseAccepted(res)
 }
 
 exports.state = function(req, res) {
